@@ -32,7 +32,7 @@ with rasterio._loading.add_gdal_dll_directories():
     from rasterio.transform import rowcol, guard_transform
 
 
-class WindowMethodsMixin(object):
+class WindowMethodsMixin:
     """Mixin providing methods for window-related calculations.
     These methods are wrappers for the functionality in
     `rasterio.windows` module.
@@ -287,10 +287,10 @@ def from_bounds(
     if not isinstance(transform, Affine):  # TODO: RPCs?
         raise WindowError("A transform object is required to calculate the window")
 
-    if (right - left) / transform.a <= 0:
+    if (right - left) / transform.a < 0:
         raise WindowError("Bounds and transform are inconsistent")
 
-    if (bottom - top) / transform.e <= 0:
+    if (bottom - top) / transform.e < 0:
         raise WindowError("Bounds and transform are inconsistent")
 
     rows, cols = rowcol(
@@ -504,7 +504,7 @@ def validate_length_value(instance, attribute, value):
 
 @attr.s(slots=True,
         frozen=True)
-class Window(object):
+class Window:
     """Windows are rectangular subsets of rasters.
 
     This class abstracts the 2-tuples mentioned in the module docstring
